@@ -48,65 +48,6 @@ int main(int argc, char* argv[])
     /*
      * General demo setup: Init EGL and OpenGL context
      */
-    /*EGLDisplay display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-
-    EGLint major, minor;
-    eglInitialize(display, &major, &minor);
-
-    const EGLint configAttribs[] = {
-        EGL_SURFACE_TYPE, EGL_PBUFFER_BIT,
-        EGL_BLUE_SIZE, 8,
-        EGL_GREEN_SIZE, 8,
-        EGL_RED_SIZE, 8,
-        EGL_DEPTH_SIZE, 8,
-        EGL_RENDERABLE_TYPE, EGL_OPENGL_BIT,
-        EGL_NONE
-    };
-
-    EGLint numConfigs;
-    EGLConfig config;
-    eglChooseConfig(display, configAttribs, &config, 1, &numConfigs);
-
-    const uint32_t width = 1920;
-    const uint32_t height = 1080;
-
-    const EGLint pbufferAttribs[] = {
-        EGL_WIDTH, width,
-        EGL_HEIGHT, height,
-        EGL_NONE,
-    };
-
-    EGLSurface surface = eglCreatePbufferSurface(display, config, pbufferAttribs);
-
-    eglBindAPI(EGL_OPENGL_API);
-    EGLContext context = eglCreateContext(display, config, EGL_NO_CONTEXT, NULL);
-    eglMakeCurrent(display, surface, surface, context);
-    glewInit();
-
-    GLuint serverColorTex;
-    glGenTextures(1, &serverColorTex);
-    glBindTexture(GL_TEXTURE_2D, serverColorTex);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-
-    GLuint serverDepthTex;
-    glGenTextures(1, &serverDepthTex);
-    glBindTexture(GL_TEXTURE_2D, serverDepthTex);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-
-    GLuint serverFBO;
-    glGenFramebuffers(1, &serverFBO);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, serverFBO);
-    glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, serverColorTex, 0);
-    glFramebufferTexture(GL_DRAW_FRAMEBUFFER,  GL_DEPTH_ATTACHMENT, serverDepthTex, 0);
-
-    if (glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-    {
-        std::cerr << "Failed to create framebuffer" << std::endl;
-        return 1;
-    }
-
-    cudaGraphicsResource_t serverGraphicsResource;
-    cudaGraphicsGLRegisterImage(&serverGraphicsResource, serverColorTex, GL_TEXTURE_2D, cudaGraphicsRegisterFlagsReadOnly);*/
 
     const uint64_t bitrate = width * height * 30 * 4 * 0.07; // Kush gauge
     nvpipe* encoder = nvpipe_create_encoder(NVPIPE_H264_NV, bitrate);
@@ -121,34 +62,6 @@ int main(int argc, char* argv[])
 
     size_t serverSendBufferSize = serverDeviceBufferSize; // Reserve enough space for encoded output
     uint8_t* serverSendBuffer = new uint8_t[serverSendBufferSize];
-
-    /*glBindFramebuffer(GL_DRAW_FRAMEBUFFER, serverFBO);
-
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // Nothing to see here; just some oldschool immediate mode.. urgh
-    glViewport(0, 0, width, height);
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    glBegin(GL_TRIANGLES);
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glVertex3f(0.0f, -0.9f, 0.0f);
-    glColor3f(0.0f, 1.0f, 0.0f);
-    glVertex3f(-0.9f,0.9f, 0.0f);
-    glColor3f(0.0f, 0.0f, 1.0f);
-    glVertex3f(0.9f, 0.9f, 0.0f);
-    glEnd();
-
-    cudaGraphicsMapResources(1, &serverGraphicsResource);
-    cudaArray_t serverArray;
-    cudaGraphicsSubResourceGetMappedArray(&serverArray, serverGraphicsResource, 0, 0);
-    cudaMemcpy2DFromArray(serverDeviceBuffer, width * 4, serverArray, 0, 0, width * 4, height, cudaMemcpyDeviceToDevice);
-    cudaGraphicsUnmapResources(1, &serverGraphicsResource);*/
 
     size_t numBytes = serverSendBufferSize;
     nvp_err_t encodeStatus = nvpipe_encode(encoder, serverDeviceBuffer, serverDeviceBufferSize, serverSendBuffer, &numBytes, width, height, NVPIPE_RGBA);
@@ -218,10 +131,6 @@ int main(int argc, char* argv[])
     cudaFree(serverDeviceBuffer);
     delete[] serverSendBuffer;
     nvpipe_destroy(encoder);
-
-    //eglTerminate(display);
-
-    std::cout << "Hello Server!" << std::endl;
 
     return 0;
 }

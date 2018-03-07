@@ -49,106 +49,6 @@ void captureFramebufferPPM(GLuint framebuffer, uint32_t width, uint32_t height, 
 int main(int argc, char* argv[])
 {
     /*
-     * General demo setup: Init EGL and OpenGL context
-     */
-    /*EGLDisplay display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-
-    EGLint major, minor;
-    eglInitialize(display, &major, &minor);
-
-    const EGLint configAttribs[] = {
-        EGL_SURFACE_TYPE, EGL_PBUFFER_BIT,
-        EGL_BLUE_SIZE, 8,
-        EGL_GREEN_SIZE, 8,
-        EGL_RED_SIZE, 8,
-        EGL_DEPTH_SIZE, 8,
-        EGL_RENDERABLE_TYPE, EGL_OPENGL_BIT,
-        EGL_NONE
-    };
-
-    EGLint numConfigs;
-    EGLConfig config;
-    eglChooseConfig(display, configAttribs, &config, 1, &numConfigs);
-
-    const uint32_t width = 1920;
-    const uint32_t height = 1080;
-
-    const EGLint pbufferAttribs[] = {
-        EGL_WIDTH, width,
-        EGL_HEIGHT, height,
-        EGL_NONE,
-    };
-
-    EGLSurface surface = eglCreatePbufferSurface(display, config, pbufferAttribs);
-
-    eglBindAPI(EGL_OPENGL_API);
-    EGLContext context = eglCreateContext(display, config, EGL_NO_CONTEXT, NULL);
-    eglMakeCurrent(display, surface, surface, context);
-    glewInit();*/
-
-    /*
-     * Create OpenGL texture for display
-     */
-    /*const GLchar* clientVertexShader =
-            "#version 330\n"
-            "void main() {}";
-
-    const GLchar* clientGeometryShader =
-            "#version 330 core\n"
-            "layout(points) in;"
-            "layout(triangle_strip, max_vertices = 4) out;"
-            "out vec2 texcoord;"
-            "void main() {"
-            "gl_Position = vec4( 1.0, 1.0, 0.0, 1.0 ); texcoord = vec2( 1.0, 1.0 ); EmitVertex();"
-            "gl_Position = vec4(-1.0, 1.0, 0.0, 1.0 ); texcoord = vec2( 0.0, 1.0 ); EmitVertex();"
-            "gl_Position = vec4( 1.0,-1.0, 0.0, 1.0 ); texcoord = vec2( 1.0, 0.0 ); EmitVertex();"
-            "gl_Position = vec4(-1.0,-1.0, 0.0, 1.0 ); texcoord = vec2( 0.0, 0.0 ); EmitVertex();"
-            "EndPrimitive();"
-            "}";
-
-    const GLchar* clientFragmentShader =
-            "#version 330\n"
-            "uniform sampler2D tex;"
-            "in vec2 texcoord;"
-            "out vec4 color;"
-            "void main() {"
-            "	color = texture(tex, texcoord);"
-            "}";
-
-    GLuint clientVertexShaderHandle = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(clientVertexShaderHandle, 1, &clientVertexShader, 0);
-    glCompileShader(clientVertexShaderHandle);
-
-    GLuint clientGeometryShaderHandle = glCreateShader(GL_GEOMETRY_SHADER);
-    glShaderSource(clientGeometryShaderHandle, 1, &clientGeometryShader, 0);
-    glCompileShader(clientGeometryShaderHandle);
-
-    GLuint clientFragmentShaderHandle = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(clientFragmentShaderHandle, 1, &clientFragmentShader, 0);
-    glCompileShader(clientFragmentShaderHandle);
-
-    GLuint clientFullscreenQuadProgram = glCreateProgram();
-    glAttachShader(clientFullscreenQuadProgram, clientVertexShaderHandle);
-    glAttachShader(clientFullscreenQuadProgram, clientGeometryShaderHandle);
-    glAttachShader(clientFullscreenQuadProgram, clientFragmentShaderHandle);
-    glLinkProgram(clientFullscreenQuadProgram);
-
-    GLuint clientFullscreenTextureLocation = glGetUniformLocation(clientFullscreenQuadProgram, "tex");
-
-    GLuint clientFullscreenVAO;
-    glGenVertexArrays(1, &clientFullscreenVAO);
-
-    GLuint clientColorTex;
-    glGenTextures(1, &clientColorTex);
-    glBindTexture(GL_TEXTURE_2D, clientColorTex);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0); // must use RGBA(8) here for CUDA-GL interop
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    cudaGraphicsResource_t clientGraphicsResource;
-    cudaGraphicsGLRegisterImage(&clientGraphicsResource, clientColorTex, GL_TEXTURE_2D, cudaGraphicsRegisterFlagsWriteDiscard);*/
-
-    /*
      * Init decoder
      */
     nvpipe* decoder = nvpipe_create_decoder(NVPIPE_H264_NV);
@@ -233,27 +133,6 @@ int main(int argc, char* argv[])
 
     std::cout << "Decode finished!" << std::endl;
 
-    /*cudaGraphicsMapResources(1, &clientGraphicsResource);
-    cudaArray_t clientArray;
-    cudaGraphicsSubResourceGetMappedArray(&clientArray, clientGraphicsResource, 0, 0);
-    cudaMemcpy2DToArray(clientArray, 0, 0, clientDeviceBuffer, width * 4, width * 4, height, cudaMemcpyDeviceToDevice);
-    cudaGraphicsUnmapResources(1, &clientGraphicsResource);*/
-
-    /*
-     * Display decoded frame
-     */
-    /*glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Only for verification
-
-    glUseProgram(clientFullscreenQuadProgram);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, clientColorTex);
-    glUniform1i(clientFullscreenTextureLocation, 0);
-    glBindVertexArray(clientFullscreenVAO);
-    glDrawArrays(GL_POINTS, 0, 1);*/
-
 #ifdef DEBUG
     // Export rendered image for verification
     captureFramebufferPPM(0, width, height, "2-client.ppm");
@@ -262,10 +141,6 @@ int main(int argc, char* argv[])
     delete[] clientReceiveBuffer;
     cudaFree(clientDeviceBuffer);
     nvpipe_destroy(decoder);
-
-    //eglTerminate(display);
-
-    std::cout << "Hello Client!" << std::endl;
 
     return 0;
 }
