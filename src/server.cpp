@@ -6,11 +6,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-//#include <EGL/egl.h>
-//#include <GL/glew.h>
 #include <cuda.h>
 #include <cuda_runtime.h>
-#include <cuda_gl_interop.h>
 #include <nvpipe.h>
 
 #define PORT 9080

@@ -21,8 +21,6 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${${PROJECT_NAME}_SOURCE_DIR}/CMakeModules")
 
-find_package(EGL)
-find_package(GLEW)
 find_package(CUDA)
 find_package(nvpipe)
 
