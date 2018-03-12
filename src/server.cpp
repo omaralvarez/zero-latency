@@ -16,35 +16,8 @@
 const uint32_t width = 1920;
 const uint32_t height = 1080;
 
-#ifdef DEBUG
-void captureFramebufferPPM(GLuint framebuffer, uint32_t width, uint32_t height, const std::string& path)
-{
-    // For verification...
-
-    size_t numBytes = width * height * 3;
-    uint8_t* rgb = new uint8_t[numBytes];
-
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
-    glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, rgb);
-
-    std::ofstream outFile;
-    outFile.open(path.c_str(), std::ios::binary);
-
-    outFile << "P6" << "\n"
-            << width << " " << height << "\n"
-            << "255\n";
-
-    outFile.write((char*) rgb, numBytes);
-
-    delete[] rgb;
-}
-#endif
-
 int main(int argc, char* argv[])
 {
-    /*
-     * General demo setup: Init EGL and OpenGL context
-     */
 
     const uint64_t bitrate = width * height * 30 * 4 * 0.07; // Kush gauge
     nvpipe* encoder = nvpipe_create_encoder(NVPIPE_H264_NV, bitrate);

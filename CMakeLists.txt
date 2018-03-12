@@ -24,13 +24,13 @@ list(APPEND CMAKE_MODULE_PATH "${${PROJECT_NAME}_SOURCE_DIR}/CMakeModules")
 find_package(CUDA)
 find_package(nvpipe)
 
-include_directories(${EGL_INCLUDE_DIR} ${GLEW_INCLUDE_DIRS} ${CUDA_INCLUDE_DIRS})
+include_directories(${CUDA_INCLUDE_DIRS})
 
 set(SOURCE_FILES_SERVER src/server.cpp)
 set(SOURCE_FILES_CLIENT src/client.cpp)
 
 add_executable(${PROJECT_NAME}-server ${SOURCE_FILES_SERVER})
-target_link_libraries(${PROJECT_NAME}-server nvpipe ${EGL_LIBRARIES} ${GLEW_LIBRARIES} ${CUDA_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}-server nvpipe ${CUDA_LIBRARIES})
 
 add_executable(${PROJECT_NAME}-client ${SOURCE_FILES_CLIENT})
-target_link_libraries(${PROJECT_NAME}-client nvpipe ${EGL_LIBRARIES} ${GLEW_LIBRARIES} ${CUDA_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}-client nvpipe ${CUDA_LIBRARIES})

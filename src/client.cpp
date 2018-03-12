@@ -18,31 +18,6 @@
 const uint32_t width = 1920;
 const uint32_t height = 1080;
 
-#ifdef DEBUG
-void captureFramebufferPPM(GLuint framebuffer, uint32_t width, uint32_t height, const std::string& path)
-{
-    // For verification...
-
-    size_t numBytes = width * height * 3;
-    uint8_t* rgb = new uint8_t[numBytes];
-
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
-    glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, rgb);
-
-    std::ofstream outFile;
-    outFile.open(path.c_str(), std::ios::binary);
-
-    outFile << "P6" << "\n"
-            << width << " " << height << "\n"
-            << "255\n";
-
-    outFile.write((char*) rgb, numBytes);
-
-    delete[] rgb;
-}
-#endif
-
-
 int main(int argc, char* argv[])
 {
     /*
@@ -117,9 +92,6 @@ int main(int argc, char* argv[])
     uint8_t* rgb = (uint8_t*) malloc(imgsz);
     memset (rgb,0,imgsz);
 
-    /*
-     * Decode to OpenGL texture
-     */
     size_t numBytes = clientReceiveBufferSize;
     nvp_err_t decodeStatus = nvpipe_decode(decoder, clientReceiveBuffer, size, rgb, width, height, NVPIPE_RGBA);
     if (decodeStatus != NVPIPE_SUCCESS)
