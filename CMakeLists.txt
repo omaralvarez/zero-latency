@@ -28,9 +28,13 @@ include_directories(${CUDA_INCLUDE_DIRS})
 
 set(SOURCE_FILES_SERVER src/server.cpp)
 set(SOURCE_FILES_CLIENT src/client.cpp)
+set(SOURCE_FILES_STANDALONE src/standalone.cpp)
 
 add_executable(${PROJECT_NAME}-server ${SOURCE_FILES_SERVER})
 target_link_libraries(${PROJECT_NAME}-server nvpipe ${CUDA_LIBRARIES})
 
 add_executable(${PROJECT_NAME}-client ${SOURCE_FILES_CLIENT})
 target_link_libraries(${PROJECT_NAME}-client nvpipe ${CUDA_LIBRARIES})
+
+add_executable(${PROJECT_NAME}-standalone ${SOURCE_FILES_STANDALONE})
+target_link_libraries(${PROJECT_NAME}-standalone nvpipe ${CUDA_LIBRARIES})
